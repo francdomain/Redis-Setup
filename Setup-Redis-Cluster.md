@@ -459,13 +459,13 @@ redis-cli --tls --insecure -p 6380
 
 ![alt text](<./images/Screenshot 2026-04-01 at 5.19.28 PM.png>)
 
-## Memory Management
+# Memory Management
 
 Proper memory management prevents Redis from consuming all available system memory and ensures stable operation.
 
 ### Configure Memory Limits
 
-Set memory limits and eviction policies in `/etc/redis/redis.conf`:
+**Set memory limits and eviction policies in `/etc/redis/redis.conf`:**
 
 ```bash
 # Maximum memory Redis can use (adjust based on your server)
@@ -487,6 +487,8 @@ maxmemory-policy allkeys-lru
 # Number of samples to check for LRU/LFU eviction (higher = more accurate but slower)
 maxmemory-samples 10
 ```
+
+![alt text](<./images/Screenshot 2026-04-01 at 5.34.22 PM.png>)
 
 ## Monitor Memory Usage
 
