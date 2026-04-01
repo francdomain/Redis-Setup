@@ -405,6 +405,8 @@ sudo chown -R redis:redis /etc/redis/tls
 sudo chmod 600 /etc/redis/tls/redis.key
 ```
 
+![alt text](<./images/Screenshot 2026-04-01 at 12.56.07 PM.png>)
+
 Add TLS configuration to `/etc/redis/redis.conf`:
 
 ```bash
