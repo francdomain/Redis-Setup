@@ -4,7 +4,7 @@ Redis is an in-memory data structure store that serves as a database, cache, mes
 
 ## Prerequisites
 
-__Ensure the following__:
+**Ensure the following**:
 
 - Ubuntu 22.04 LTS or newer
 - Root or sudo access
@@ -38,7 +38,9 @@ sudo apt install -y redis-server redis-tools
 
 Ubuntu package installs include a systemd unit at `/lib/systemd/system/redis-server.service`.
 
-#### Verify Installation
+![alt text](<./images/Screenshot 2026-04-01 at 7.31.10 AM.png>)
+
+### Verify Installation
 
 Confirm Redis is installed and running correctly:
 
@@ -53,6 +55,8 @@ redis-cli ping
 # Expected output: PONG
 ```
 
+![alt text](<./images/Screenshot 2026-04-01 at 7.40.00 AM.png>)
+
 ### Enable Redis to Start on Boot
 
 Ensure Redis starts automatically when the system boots:
@@ -62,9 +66,11 @@ sudo systemctl enable redis-server
 sudo systemctl is-enabled redis-server
 ```
 
-## Configuring Redis for Production
+![alt text](<./images/Screenshot 2026-04-01 at 7.42.38 AM.png>)
 
-The default Redis configuration is suitable for development but requires tuning for production. The main configuration file is located at ```/etc/redis/redis.conf```
+# Configuring Redis for Production
+
+The default Redis configuration is suitable for development but requires tuning for production. The main configuration file is located at `/etc/redis/redis.conf`
 
 ### Create a Backup of the Original Configuration
 
@@ -73,6 +79,9 @@ Always backup configuration files before making changes:
 ```bash
 sudo cp /etc/redis/redis.conf /etc/redis/redis.conf.backup.$(date +%Y%m%d)
 ```
+
+![alt text](<./images/Screenshot 2026-04-01 at 7.49.15 AM.png>)
+
 ## Basic Production Configuration
 
 Edit the Redis configuration file with your preferred editor:
@@ -122,7 +131,8 @@ timeout 300
 tcp-keepalive 300
 ```
 
-#### Apply Configuration Changes
+### Apply Configuration Changes
+
 After modifying the configuration, restart Redis to apply changes:
 
 ```bash
@@ -136,15 +146,17 @@ sudo systemctl status redis-server
 sudo ss -tlnp | grep redis
 ```
 
+![alt text](<./images/Screenshot 2026-04-01 at 8.57.37 AM.png>)
+
 ## Persistence Configuration: RDB vs AOF
 
 Redis offers two persistence mechanisms to ensure data durability. Understanding and configuring these correctly is crucial for production environments.
 
-#### RDB (Redis Database) Snapshots
+### RDB (Redis Database) Snapshots
 
 RDB creates point-in-time snapshots of your dataset at specified intervals. It's compact and excellent for backups but may lose data between snapshots.
 
-Configure RDB persistence in ``/etc/redis/redis.conf``:
+Configure RDB persistence in `/etc/redis/redis.conf`:
 
 ```bash
 # RDB Persistence Configuration
@@ -175,11 +187,14 @@ dbfilename dump.rdb
 # Directory where RDB file will be stored
 dir /var/lib/redis
 ```
+
+![alt text](<./images/Screenshot 2026-04-01 at 10.35.10 AM.png>)
+
 ## AOF (Append Only File) Persistence
 
 AOF logs every write operation, providing better durability at the cost of larger files. This is recommended for production when data loss must be minimized.
 
-Configure AOF persistence in ``/etc/redis/redis.conf``:
+Configure AOF persistence in `/etc/redis/redis.conf`:
 
 ```bash
 # AOF Persistence Configuration
@@ -227,7 +242,8 @@ appendfilename "appendonly.aof"
 appendfsync everysec
 aof-use-rdb-preamble yes
 ```
-### Verify Persistence Settings
+
+## Verify Persistence Settings
 
 Check that persistence is working correctly:
 
@@ -248,11 +264,15 @@ redis-cli BGSAVE
 redis-cli LASTSAVE
 ```
 
+![alt text](<./images/Screenshot 2026-04-01 at 10.55.13 AM.png>)
+![alt text](<./images/Screenshot 2026-04-01 at 11.00.27 AM.png>)
+
 ## Security Hardening
 
 Securing Redis is critical for production deployments. By default, Redis has no authentication, making security configuration essential.
 
 ### Password Authentication
+
 Set a strong password for Redis authentication:
 
 ```bash
@@ -272,7 +292,9 @@ openssl rand -base64 48
 
 # Example output: Xa9K7mN2pL5vB8xC3dF6gH1jQ4rT0wY9zA2eI5oU8uP3sM6nK7lJ0hG=
 ```
+
 #### Test Password Authentication
+
 After setting the password and restarting Redis:
 
 ```bash
@@ -293,7 +315,11 @@ AUTH your_password
 ping
 # Output: PONG
 ```
-#### Disable Dangerous Commands
+
+![alt text](<./images/Screenshot 2026-04-01 at 11.18.38 AM.png>)
+
+### Disable Dangerous Commands
+
 Rename or disable commands that could be dangerous in production:
 
 ```bash
@@ -318,6 +344,7 @@ rename-command KEYS "KEYS_disabled_s1t2u3v4"
 ```
 
 ### Network Security
+
 Configure network settings to minimize attack surface:
 
 ```bash
@@ -333,6 +360,7 @@ protected-mode yes
 # Disable public access to Redis if not needed
 # Only use this in a secured network environment
 ```
+
 ### Firewall Configuration
 
 Set up UFW (Uncomplicated Firewall) rules for Redis:
@@ -353,6 +381,7 @@ sudo ufw status
 # Check the rules
 sudo ufw status numbered
 ```
+
 ### TLS/SSL Encryption
 
 For production environments with external access, enable TLS encryption:
@@ -376,7 +405,7 @@ sudo chown -R redis:redis /etc/redis/tls
 sudo chmod 600 /etc/redis/tls/redis.key
 ```
 
-Add TLS configuration to ``/etc/redis/redis.conf``:
+Add TLS configuration to `/etc/redis/redis.conf`:
 
 ```bash
 # TLS/SSL Configuration
@@ -412,10 +441,12 @@ redis-cli --tls --insecure -p 6380
 ```
 
 ## Memory Management
+
 Proper memory management prevents Redis from consuming all available system memory and ensures stable operation.
 
 ### Configure Memory Limits
-Set memory limits and eviction policies in ``/etc/redis/redis.conf``:
+
+Set memory limits and eviction policies in `/etc/redis/redis.conf`:
 
 ```bash
 # Maximum memory Redis can use (adjust based on your server)
@@ -437,7 +468,9 @@ maxmemory-policy allkeys-lru
 # Number of samples to check for LRU/LFU eviction (higher = more accurate but slower)
 maxmemory-samples 10
 ```
+
 ## Monitor Memory Usage
+
 Use Redis commands to monitor memory:
 
 ```bash
@@ -455,6 +488,7 @@ redis-cli MEMORY DOCTOR
 ```
 
 ### Memory Optimization Tips
+
 Configure additional memory optimization settings:
 
 ```bash
@@ -481,6 +515,7 @@ replica-lazy-flush yes
 ```
 
 ## System Memory Configuration
+
 Optimize system settings for Redis:
 
 ```bash
@@ -531,7 +566,7 @@ A typical Sentinel setup includes:
 
 ## Configure Redis Master
 
-__On the master server, ensure basic configuration:__
+**On the master server, ensure basic configuration:**
 
 ```bash
 # /etc/redis/redis.conf on master (e.g., 192.168.1.10)
@@ -546,6 +581,7 @@ appendfsync everysec
 ```
 
 ## Configure Redis Replicas
+
 On each replica server, configure replication:
 
 ```bash
@@ -565,7 +601,9 @@ replica-read-only yes
 appendonly yes
 appendfsync everysec
 ```
+
 ## Configure Sentinel
+
 Create a Sentinel configuration file on each Sentinel node:
 
 ```bash
@@ -575,7 +613,8 @@ sudo mkdir -p /etc/redis
 # Create the Sentinel configuration file
 sudo nano /etc/redis/sentinel.conf
 ```
-__Add the following Sentinel configuration:__
+
+**Add the following Sentinel configuration:**
 
 ```bash
 # /etc/redis/sentinel.conf
@@ -642,6 +681,7 @@ EOF
 
 sudo systemctl daemon-reload
 ```
+
 ### Start Sentinel Services
 
 Start Sentinel on each node:
@@ -668,6 +708,7 @@ redis-cli -p 26379 SENTINEL sentinels mymaster
 ```
 
 ### Sentinel Client Configuration
+
 Applications should connect through Sentinel for automatic failover support:
 
 ```bash
@@ -693,6 +734,7 @@ value = replica.get('key')
 ```
 
 ## Test Failover
+
 Test the failover mechanism:
 
 ```bash
@@ -707,9 +749,11 @@ redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
 ```
 
 ## Redis Cluster for Horizontal Scaling
+
 Redis Cluster provides automatic sharding across multiple nodes, enabling horizontal scaling beyond a single server's capacity.
 
 ### Cluster Architecture
+
 Redis Cluster:
 
 - Automatically shards data across multiple nodes using hash slots (16384 total)
@@ -717,6 +761,7 @@ Redis Cluster:
 - Requires a minimum of 6 nodes (3 masters + 3 replicas)
 
 #### Prepare Cluster Nodes
+
 Create configuration for each cluster node (repeat for nodes on ports 7000-7005):
 
 ```bash
@@ -727,7 +772,8 @@ sudo mkdir -p /var/lib/redis/cluster/{7000,7001,7002,7003,7004,7005}
 # Ensure Redis user can read/write cluster files
 sudo chown -R redis:redis /etc/redis/cluster /var/lib/redis/cluster
 ```
-__Create a configuration file for each node:__
+
+**Create a configuration file for each node:**
 
 ```bash
 # /etc/redis/cluster/7000.conf
@@ -821,7 +867,9 @@ EOF
 
 sudo systemctl daemon-reload
 ```
+
 ### Start Cluster Nodes
+
 Start each Redis instance:
 
 ```bash
@@ -839,6 +887,7 @@ redis-cli -p 7000 -a your_cluster_password PING
 ```
 
 ## Create the Cluster
+
 Use redis-cli to create the cluster:
 
 ```bash
@@ -854,6 +903,7 @@ redis-cli --cluster create \
 ```
 
 ### Verify Cluster Status
+
 Check that the cluster is functioning correctly:
 
 ```bash
@@ -871,6 +921,7 @@ redis-cli --cluster check 192.168.1.10:7000 -a your_cluster_password
 ```
 
 ## Working with Redis Cluster
+
 When connecting to a cluster, use the `-c` flag for automatic redirection:
 
 ```bash
@@ -888,6 +939,7 @@ CLUSTER KEYSLOT mykey
 ```
 
 ## Cluster Maintenance Operations
+
 Common cluster maintenance tasks:
 
 ```bash
@@ -918,6 +970,7 @@ redis-cli --cluster fix 192.168.1.10:7000 \
 ```
 
 ## Performance Tuning
+
 Optimize Redis for maximum performance in production.
 
 ### Connection and Client Settings
@@ -937,6 +990,7 @@ timeout 0
 ```
 
 ### I/O Threading (Redis 6.0+)
+
 Enable I/O threading for better performance on multi-core systems:
 
 ```bash
@@ -948,6 +1002,7 @@ io-threads-do-reads yes
 ```
 
 ### Slow Log Configuration
+
 Monitor slow commands to identify performance issues:
 
 ```bash
@@ -959,6 +1014,7 @@ slowlog-max-len 128
 ```
 
 Check slow log:
+
 ```bash
 # View slow log entries
 redis-cli SLOWLOG GET 10
@@ -971,6 +1027,7 @@ redis-cli SLOWLOG RESET
 ```
 
 ### Latency Monitoring
+
 Enable latency monitoring to diagnose issues:
 
 ```bash
@@ -988,6 +1045,7 @@ redis-cli LATENCY LATEST
 ```
 
 ## Monitoring and Logging
+
 Essential Monitoring Commands
 
 ```bash
@@ -1011,12 +1069,14 @@ redis-cli MONITOR
 ```
 
 #### Log Management
+
 Configure proper log rotation:
 
 ```bash
 # Create logrotate configuration for Redis
 sudo vim /etc/logrotate.d/redis
 ```
+
 Add the following content:
 
 ```txt
@@ -1036,7 +1096,7 @@ Add the following content:
 
 ## Backup and Recovery
 
-__Automated Backups__
+**Automated Backups**
 Create a backup script:
 
 ```bash
@@ -1109,7 +1169,8 @@ redis-cli -a your_password DBSIZE
 ```
 
 ## Production Checklist
-__Before going to production, verify the following:__
+
+**Before going to production, verify the following:**
 
 ```bash
 # Security checklist
@@ -1143,7 +1204,7 @@ __Before going to production, verify the following:__
 
 ### Conclusion
 
-__You now have a production-ready Redis installation on Ubuntu with:__
+**You now have a production-ready Redis installation on Ubuntu with:**
 
 - Secure installation with password authentication
 - Proper persistence configuration for data durability
@@ -1161,3 +1222,5 @@ Remember to regularly update Redis, monitor its performance, and test your backu
 - [Redis Cluster Tutorial](https://redis.io/docs/latest/develop/)
 - [Redis Sentinel Documentation](https://redis.io/docs/latest/develop/)
 - [Redis Performance Optimization](https://redis.io/docs/latest/develop/)
+
+<!-- sudo grep -n 'appendname' /etc/redis/redis.conf -->
