@@ -343,7 +343,7 @@ rename-command SHUTDOWN "SHUTDOWN_m3n4o5p6q7r8"
 rename-command KEYS "KEYS_disabled_s1t2u3v4"
 ```
 
-### Network Security
+# Network Security
 
 Configure network settings to minimize attack surface:
 
@@ -360,6 +360,8 @@ protected-mode yes
 # Disable public access to Redis if not needed
 # Only use this in a secured network environment
 ```
+
+![alt text](<./images/Screenshot 2026-04-01 at 4.46.33 PM.png>)
 
 ### Firewall Configuration
 
