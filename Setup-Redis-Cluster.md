@@ -436,15 +436,28 @@ tls-prefer-server-ciphers yes
 
 ![alt text](<./images/Screenshot 2026-04-01 at 2.51.17 PM.png>)
 
-Connect to Redis using TLS:
+### Connect to Redis using TLS:
+
+**Note:**
+
+1. `--cert/--key` are for client authentication (mTLS). They do not tell redis-cli what CA to trust for the server cert.
+2. Since a self-signed server cert is used, you must either:
+   provide it as a trusted CA using `--cacert`, or
+   bypass verification with `--insecure` (testing only).
+3. If Redis config has `tls-auth-clients yes`, then include client `cert/key`:
 
 ```bash
-# Connect using TLS
-redis-cli --tls --cert /etc/redis/tls/redis.crt --key /etc/redis/tls/redis.key -p 6380
+# If tls-auth-clients yes
+redis-cli --tls --cacert /etc/redis/tls/redis.crt --cert /etc/redis/tls/redis.crt --key /etc/redis/tls/redis.key -p 6380
 
-# If using self-signed certificates
+# If using self-signed certificates and tls-auth-clients is set to no
+redis-cli --tls --cacert /etc/redis/tls/redis.crt -p 6380
+
+# For testing only
 redis-cli --tls --insecure -p 6380
 ```
+
+![alt text](<./images/Screenshot 2026-04-01 at 5.19.28 PM.png>)
 
 ## Memory Management
 
