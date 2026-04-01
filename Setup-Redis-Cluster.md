@@ -508,6 +508,12 @@ redis-cli MEMORY USAGE mykey
 redis-cli MEMORY DOCTOR
 ```
 
+![alt text](<./images/Screenshot 2026-04-01 at 5.45.38 PM.png>)
+
+![alt text](<./images/Screenshot 2026-04-01 at 5.50.50 PM.png>)
+
+![alt text](<./images/Screenshot 2026-04-01 at 6.10.22 PM.png>)
+
 ### Memory Optimization Tips
 
 Configure additional memory optimization settings:
