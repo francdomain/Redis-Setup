@@ -541,7 +541,11 @@ lazyfree-lazy-server-del yes
 replica-lazy-flush yes
 ```
 
-## System Memory Configuration
+![alt text](<./images/Screenshot 2026-04-01 at 6.30.14 PM.png>)
+
+![alt text](<./images/Screenshot 2026-04-01 at 6.32.43 PM.png>)
+
+# System Memory Configuration
 
 Optimize system settings for Redis:
 
@@ -578,6 +582,16 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable --now disable-thp
 ```
+
+![alt text](<./images/Screenshot 2026-04-01 at 6.41.28 PM.png>)
+
+![alt text](<./images/Screenshot 2026-04-01 at 6.44.41 PM.png>)
+
+```bash
+sudo vim /etc/systemd/system/disable-thp.service
+```
+
+![alt text](<./images/Screenshot 2026-04-01 at 6.45.18 PM.png>)
 
 # Redis Sentinel for High Availability
 
