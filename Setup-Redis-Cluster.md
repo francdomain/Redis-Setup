@@ -432,6 +432,8 @@ tls-protocols "TLSv1.2 TLSv1.3"
 tls-prefer-server-ciphers yes
 ```
 
+![alt text](<./images/Screenshot 2026-04-01 at 2.51.17 PM.png>)
+
 Connect to Redis using TLS:
 
 ```bash
